@@ -37,18 +37,19 @@ RSpec.describe OysterCard do
       it "changes @in_journey" do
         subject.instance_variable_set(:@in_journey, false)
         subject.instance_variable_set(:@balance, OysterCard::MINIMUM_BALANCE)
-        subject.touch_in
+        subject.touch_in("")
         expect(subject.instance_variable_get(:@in_journey)).to eq true
-      end
-
-      it "returns a Boolean" do
-        subject.instance_variable_set(:@balance, OysterCard::MINIMUM_BALANCE)
-        expect(subject.touch_in).to eq(true).or (false)
       end
 
       it "throws an error if insufficient funds" do
         subject.instance_variable_set(:@balance, 0)
-        expect { subject.touch_in }.to raise_error "Please top up"
+        expect { subject.touch_in("") }.to raise_error "Please top up"
+      end
+
+      it "remembers the entry station" do
+        subject.instance_variable_set(:@balance, OysterCard::MINIMUM_BALANCE)
+        subject.touch_in("Highgate")
+        expect(subject.instance_variable_get(:@origin_station)).to eq("Highgate")
       end
     end
 
@@ -65,6 +66,11 @@ RSpec.describe OysterCard do
 
       it "deducts the fare" do
         expect{ subject.touch_out }.to change{ subject.instance_variable_get(:@balance) }.by(-OysterCard::MINIMUM_FARE)
+      end
+
+      xit "displays the origin station" do
+        subject.instance_variable_set(:@origin_station, "Highgate")
+        expect(subject.touch_out).to eq("Highgate")
       end
 
     end

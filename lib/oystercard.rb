@@ -9,6 +9,7 @@ MINIMUM_FARE = 2
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
     @in_journey = false
+    @origin_station = ""
   end
 
   def top_up(amount)
@@ -24,10 +25,11 @@ MINIMUM_FARE = 2
     (amount + @balance) > MAXIMUM_BALANCE
   end
 
-  def touch_in
+  def touch_in(origin_station)
     fail "Please top up" if @balance < MINIMUM_BALANCE
 
     @in_journey = true
+    @origin_station = origin_station
   end
 
   def in_journey?
