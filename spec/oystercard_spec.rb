@@ -40,17 +40,20 @@ RSpec.describe OysterCard do
     end
 
     describe '#in_journey?' do
-      it "checks if #in_journey initializes as false" do
+      it "initializes as false" do
         expect(subject.in_journey?).to eq(false)
       end
     end
 
     describe '#touch_in' do
-      it "checks that touch_in changes @in_journey" do
+      it "changes @in_journey" do
         subject.instance_variable_set(:@in_journey, false)
         subject.touch_in
         expect(subject.instance_variable_get(:@in_journey)).to eq true
       end
 
+      it "returns a Boolean" do
+        expect(subject.touch_in).to eq(true).or (false)
+      end
     end
 end
