@@ -61,5 +61,11 @@ RSpec.describe OysterCard do
       it "returns a Boolean" do
         expect(subject.touch_out).to be(true).or eq(false)
       end
+
+      it "changes @in_journey" do
+        subject.instance_variable_set(:@in_journey, true)
+        subject.touch_out
+        expect(subject).not_to be_in_journey
+      end
     end
 end
