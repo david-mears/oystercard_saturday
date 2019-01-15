@@ -53,7 +53,13 @@ RSpec.describe OysterCard do
       end
 
       it "returns a Boolean" do
-        expect(subject.touch_in).to eq(true).or (false)
+        expect(subject.touch_in).to eq(true).or eq(false)
+      end
+    end
+    
+    describe '#touch_out' do
+      it "returns a Boolean" do
+        expect(subject.touch_out).to be(true).or eq(false)
       end
     end
 end
