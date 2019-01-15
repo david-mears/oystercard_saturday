@@ -4,6 +4,7 @@ attr_reader :balance, :in_journey
 DEFAULT_BALANCE = 0
 MAXIMUM_BALANCE = 90
 MINIMUM_BALANCE = 1
+MINIMUM_FARE = 2
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
@@ -16,7 +17,7 @@ MINIMUM_BALANCE = 1
   end
 
   def deduct(amount)
-    raise "Insufficient Funds" if (amount > @balance)
+    # raise "Insufficient Funds" if (amount > @balance)
     @balance -= amount
   end
 
@@ -39,6 +40,7 @@ MINIMUM_BALANCE = 1
   end
 
   def touch_out
+    deduct(MINIMUM_FARE)
     @in_journey = false
   end
 
