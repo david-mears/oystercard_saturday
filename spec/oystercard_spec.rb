@@ -1,9 +1,7 @@
 require 'oystercard'
 
 RSpec.describe OysterCard do
-  before(:each) do
-    @oystercard = OysterCard.new
-  end
+  let(:oystercard) { OysterCard.new }
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:in_journey?) }
@@ -18,8 +16,8 @@ RSpec.describe OysterCard do
       end
 
       it "confirms balance is updated as expected" do
-          @oystercard.top_up(15)
-          expect(@oystercard.balance).to eq(15)
+          subject.top_up(15)
+          expect(subject.balance).to eq(15)
       end
 
       it 'raises error if new balance exceeds maximum balance' do
@@ -32,7 +30,7 @@ RSpec.describe OysterCard do
     describe '#deduct' do
       it "reduces balance by specified amount" do
         subject.top_up(10)
-        expect{subject.deduct(10)}.to change{subject.balance}.by(-10) 
+        expect{subject.deduct(10)}.to change{subject.balance}.by(-10)
       end
 
       it "raises error if amount deducted is greater than balance" do
@@ -48,8 +46,11 @@ RSpec.describe OysterCard do
     end
 
     describe '#touch_in' do
-      it "checks" do
-        
+      it "checks that touch_in changes @in_journey" do
+        subject.instance_variable_set(:@in_journey, false)
+        subject.touch_in
+        expect(subject.instance_variable_get(:@in_journey)).to eq true
       end
+
     end
 end
