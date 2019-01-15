@@ -48,24 +48,20 @@ RSpec.describe OysterCard do
     describe '#touch_in' do
       it "changes @in_journey" do
         subject.instance_variable_set(:@in_journey, false)
+        subject.instance_variable_set(:@balance, OysterCard::MINIMUM_BALANCE)
         subject.touch_in
         expect(subject.instance_variable_get(:@in_journey)).to eq true
       end
 
       it "returns a Boolean" do
-        expect(subject.touch_in).to eq(true).or eq(false)
-      end
-    end
-    
-    describe '#touch_out' do
-      it "returns a Boolean" do
-        expect(subject.touch_out).to be(true).or eq(false)
+        subject.instance_variable_set(:@balance, OysterCard::MINIMUM_BALANCE)
+        expect(subject.touch_in).to eq(true).or (false)
       end
 
-      it "changes @in_journey" do
-        subject.instance_variable_set(:@in_journey, true)
-        subject.touch_out
-        expect(subject).not_to be_in_journey
+      it "throws an error if insufficient funds" do
+        subject.instance_variable_set(:@balance, 0)
+        expect { subject.touch_in }.to raise_error "Please top up"
       end
     end
+
 end
