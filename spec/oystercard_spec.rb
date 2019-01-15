@@ -27,13 +27,6 @@ RSpec.describe OysterCard do
       end
     end
 
-    describe '#deduct' do
-      it "reduces balance by specified amount" do
-        subject.top_up(10)
-        expect{subject.deduct(10)}.to change{subject.balance}.by(-10)
-      end
-    end
-
     describe '#in_journey?' do
       it "initializes as false" do
         expect(subject.in_journey?).to eq(false)

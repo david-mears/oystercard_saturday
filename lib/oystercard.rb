@@ -16,11 +16,6 @@ MINIMUM_FARE = 2
     @balance += amount
   end
 
-  def deduct(amount)
-    # raise "Insufficient Funds" if (amount > @balance)
-    @balance -= amount
-  end
-
   def error_message
     "ERROR!! The Maximum balance is £#{OysterCard::MAXIMUM_BALANCE}"
   end
@@ -42,6 +37,12 @@ MINIMUM_FARE = 2
   def touch_out
     deduct(MINIMUM_FARE)
     @in_journey = false
+  end
+
+  private
+
+  def deduct(amount)
+    @balance -= amount
   end
 
 end
