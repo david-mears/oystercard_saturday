@@ -33,10 +33,12 @@ RSpec.describe OysterCard do
       end
     end
 
+
     before do
       oystercard.top_up(OysterCard::MINIMUM_BALANCE)
       oystercard.touch_in(station)
     end
+
 
     describe '#touch_in' do
       it "changes @in_journey" do
@@ -57,17 +59,24 @@ RSpec.describe OysterCard do
     describe '#touch_out' do
 
       it "changes in_journey?" do
-        oystercard.touch_out
-        expect(subject.in_journey?).to eq false
+        oystercard.touch_out(station)
+        expect(oystercard.in_journey?).to eq false
       end
 
       it "deducts the fare" do
-        expect{ subject.touch_out }.to change{ subject.instance_variable_get(:@balance) }.by(-OysterCard::MINIMUM_FARE)
+        expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by(-OysterCard::MINIMUM_FARE)
       end
 
       it "forgets the entry_station on touch_out" do
-        oystercard.touch_out
-        expect(subject.entry_station).to eq nil
+        oystercard.touch_out(station)
+        expect(oystercard.entry_station).to eq nil
+      end
+
+      it "stores the last journey in @journeys" do
+        station_2 = double (:station_2)
+        oystercard.touch_out(station_2)
+        expected_hash = { station => station_2 }
+        expect(oystercard.journeys[-1]).to eq expected_hash
       end
 
     end
