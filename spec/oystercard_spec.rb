@@ -22,8 +22,7 @@ RSpec.describe OysterCard do
       end
 
       it 'raises error if new balance exceeds maximum balance' do
-          maximum_balance = OysterCard::MAXIMUM_BALANCE
-          subject.top_up(maximum_balance)
+          subject.top_up(OysterCard::MAXIMUM_BALANCE)
           expect { subject.top_up(1) }.to raise_error "ERROR!! The Maximum balance is £#{OysterCard::MAXIMUM_BALANCE}"
       end
     end
@@ -34,31 +33,31 @@ RSpec.describe OysterCard do
       end
     end
 
+    before do
+      oystercard.top_up(OysterCard::MINIMUM_BALANCE)
+      oystercard.touch_in(station)
+    end
+
     describe '#touch_in' do
       it "changes @in_journey" do
-        subject.top_up(OysterCard::MINIMUM_BALANCE)
-        subject.touch_in(station)
-        expect(subject.in_journey?).to eq true
+
+        expect(oystercard.in_journey?).to eq true
       end
 
       it "throws an error if insufficient funds" do
-        subject.instance_variable_set(:@balance, 0)
-        expect { subject.touch_in(station) }.to raise_error "Please top up"
+        oystercard.instance_variable_set(:@balance, 0)
+        expect { oystercard.touch_in(station) }.to raise_error "Please top up"
       end
 
       it "remembers the entry station" do
-        subject.top_up OysterCard::MINIMUM_BALANCE
-        subject.touch_in(station)
-        expect(subject.entry_station).to eq(station)
+        expect(oystercard.entry_station).to eq(station)
       end
     end
 
     describe '#touch_out' do
 
       it "changes in_journey?" do
-        subject.top_up OysterCard::MINIMUM_BALANCE
-        subject.touch_in(station)
-        subject.touch_out
+        oystercard.touch_out
         expect(subject.in_journey?).to eq false
       end
 
@@ -67,9 +66,7 @@ RSpec.describe OysterCard do
       end
 
       it "forgets the entry_station on touch_out" do
-        subject.top_up(OysterCard::MINIMUM_BALANCE)
-        subject.touch_in(station)
-        subject.touch_out
+        oystercard.touch_out
         expect(subject.entry_station).to eq nil
       end
 
