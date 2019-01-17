@@ -9,7 +9,7 @@ MINIMUM_FARE = 2
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
     @entry_station = nil
-    @journeys = []
+    @journeys = [] # Array of hashes
   end
 
   def top_up(amount)
@@ -25,26 +25,26 @@ MINIMUM_FARE = 2
     (amount + balance) > MAXIMUM_BALANCE
   end
 
-  def touch_in(origin_station)
+  def touch_in(entry_station)
     fail "Please top up" if balance < MINIMUM_BALANCE
-
-    @entry_station = origin_station
-    current_journey = { origin_station => nil }
-    @journeys.push(current_journey)
+    @journeys << Journey.new(entry_station)
+    # @entry_station = origin_station
+    # current_journey = { origin_station => nil }
+    # @journeys.push(current_journey)
   end
 
   def touch_out(exit_station)
     deduct(MINIMUM_FARE)
-    store_journey(exit_station)
+    @journeys[-1].exit_station = exit_station
     @entry_station = nil
   end
 
   private
 
-  def store_journey(exit_station)
-    current_journey = journeys[-1]
-    current_journey[@entry_station] = exit_station
-  end
+  # def store_journey(exit_station)
+  #   current_journey = journeys[-1]
+  #   current_journey[@entry_station] = exit_station
+  # end
 
   def deduct(amount)
     @balance -= amount

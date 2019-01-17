@@ -40,7 +40,7 @@ RSpec.describe OysterCard do
       end
 
       it "remembers the entry station" do
-        expect(oystercard.entry_station).to eq(station)
+        expect(oystercard.journeys[-1].data[:in]).to eq(station)
       end
     end
 
@@ -58,8 +58,7 @@ RSpec.describe OysterCard do
       it "stores the last journey in @journeys" do
         station_2 = double (:station_2)
         oystercard.touch_out(station_2)
-        expected_hash = { station => station_2 }
-        expect(oystercard.journeys[-1]).to eq expected_hash
+        expect(oystercard.journeys[-1].data[:out]).to eq station_2
       end
 
     end
