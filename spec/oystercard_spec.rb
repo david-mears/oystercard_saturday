@@ -5,10 +5,19 @@ RSpec.describe OysterCard do
   let(:station) { double 'station' }
   let(:station_2) { double 'station_2' }
 
-  it { is_expected.to respond_to(:top_up).with(1).argument }
-
   it "initializes with balance of 0" do
-      expect(subject.balance).to eq(0)
+    expect(subject.balance).to eq(0)
+  end
+
+  it 'stores the journey history' do
+    oystercard.top_up(10)
+    oystercard.touch_in(station)
+    oystercard.touch_out(station_2)
+    oystercard.touch_in(station_2)
+    oystercard.touch_out(station)
+
+    expected_penultimate_journey = { in: station, out: station_2 }
+    expected_last_journey = { in: station_2, out: station }
   end
 
   describe '#top_up' do

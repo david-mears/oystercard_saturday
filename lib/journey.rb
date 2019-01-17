@@ -18,11 +18,7 @@ class Journey
   end
 
   def fare
-    if !@x[:in] || !@x[:out]
-      PENALTY_FARE
-    else
-      MINIMUM_FARE
-    end
+    return !@x[:in] || !@x[:out] ? PENALTY_FARE : MINIMUM_FARE
   end
 
 end
