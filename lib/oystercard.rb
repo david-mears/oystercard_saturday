@@ -1,15 +1,15 @@
+require_relative 'journey'
+
 class OysterCard
-attr_reader :balance, :entry_station, :journeys
+attr_reader :balance, :journeys
 
 DEFAULT_BALANCE = 0
 MAXIMUM_BALANCE = 90
 MINIMUM_BALANCE = 1
-MINIMUM_FARE = 2
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
-    @entry_station = nil
-    @journeys = [] # Array of hashes
+    @journeys = []
   end
 
   def top_up(amount)
@@ -18,7 +18,7 @@ MINIMUM_FARE = 2
   end
 
   def error_message
-    "ERROR!! The Maximum balance is £#{OysterCard::MAXIMUM_BALANCE}"
+    "ERROR!! The Maximum balance is £#{MAXIMUM_BALANCE}"
   end
 
   def balance_exceeds_limit?(amount)
@@ -28,23 +28,21 @@ MINIMUM_FARE = 2
   def touch_in(entry_station)
     fail "Please top up" if balance < MINIMUM_BALANCE
     @journeys << Journey.new(entry_station)
-    # @entry_station = origin_station
-    # current_journey = { origin_station => nil }
-    # @journeys.push(current_journey)
   end
 
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
+    if !in_journey?
+      @journeys << Journey.new(nil)
+    end
     @journeys[-1].exit_station = exit_station
-    @entry_station = nil
+    deduct(@journeys[-1].fare)
+  end
+
+  def in_journey?
+    @journeys[-1].in_journey?
   end
 
   private
-
-  # def store_journey(exit_station)
-  #   current_journey = journeys[-1]
-  #   current_journey[@entry_station] = exit_station
-  # end
 
   def deduct(amount)
     @balance -= amount

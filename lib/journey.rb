@@ -1,13 +1,28 @@
 class Journey
 
-attr_reader :data
+  MINIMUM_FARE = 2
+  PENALTY_FARE = 6
+
+  attr_reader :x
 
   def initialize(entry_station)
-    @data = { in: entry_station }
+    @x = { in: entry_station }
   end
 
-  def exit_station=(exit_station)
-    @data[:out] = exit_station
+  def exit_station= (exit_station)
+    @x[:out] = exit_station
+  end
+
+  def in_journey?
+    ( !!@x[:in] && !@x[:out] )
+  end
+
+  def fare
+    if !@x[:in] || !@x[:out]
+      PENALTY_FARE
+    else
+      MINIMUM_FARE
+    end
   end
 
 end

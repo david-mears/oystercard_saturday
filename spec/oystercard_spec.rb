@@ -3,6 +3,7 @@ require 'oystercard'
 RSpec.describe OysterCard do
   let(:oystercard) { OysterCard.new }
   let(:station) { double 'station' }
+  let(:station_2) { double 'station_2' }
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
 
@@ -40,27 +41,71 @@ RSpec.describe OysterCard do
       end
 
       it "remembers the entry station" do
-        expect(oystercard.journeys[-1].data[:in]).to eq(station)
+        expect(oystercard.journeys[-1].x[:in]).to eq(station)
       end
     end
 
     describe '#touch_out' do
 
       it "deducts the fare" do
-        expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by(-OysterCard::MINIMUM_FARE)
-      end
-
-      it "forgets the entry_station on touch_out" do
-        oystercard.touch_out(station)
-        expect(oystercard.entry_station).to eq nil
+        expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by(-Journey::MINIMUM_FARE)
       end
 
       it "stores the last journey in @journeys" do
-        station_2 = double (:station_2)
         oystercard.touch_out(station_2)
-        expect(oystercard.journeys[-1].data[:out]).to eq station_2
+        expect(oystercard.journeys[-1].x[:out]).to eq station_2
       end
 
+    end
+
+    describe '#in_journey?' do
+
+      it 'returns true if touched in' do
+        oystercard.touch_in(station)
+        expect(oystercard.in_journey?).to eq true
+      end
+
+      it 'returns false if touched out' do
+        oystercard.touch_out(station)
+        expect(oystercard.in_journey?).to eq false
+      end
+
+    end
+
+    context 'user forgets to touch_out' do
+
+      it 'stores the entry_station in a new journey' do
+        expected_penultimate_journey = { in: station }
+        expected_last_journey = { in: station_2 }
+
+        oystercard.touch_in(station)
+        oystercard.touch_in(station_2)
+
+        expect(oystercard.journeys[-1].x).to eq expected_last_journey
+        expect(oystercard.journeys[-2].x).to eq expected_penultimate_journey
+      end
+    end
+
+    context 'user forgets to touch_in' do
+
+      it 'stores the exit_station in a new journey' do
+        expected_penultimate_journey = { in: station_2, out: station }
+        expected_last_journey = { in: nil, out: station_2 }
+
+        oystercard.touch_in(station_2)
+        oystercard.touch_out(station)
+        oystercard.touch_out(station_2)
+
+        expect(oystercard.journeys[-1].x).to eq expected_last_journey
+        expect(oystercard.journeys[-2].x).to eq expected_penultimate_journey
+      end
+
+      it "deducts the penalty fare if the entry station is missed" do
+        oystercard.touch_in(station_2)
+        oystercard.touch_out(station)
+
+        expect{ oystercard.touch_out(station_2) }.to change{ oystercard.balance }.by(-Journey::PENALTY_FARE)
+      end
     end
 
 end
