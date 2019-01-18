@@ -32,15 +32,11 @@ MINIMUM_BALANCE = 1
   end
 
   def touch_out(exit_station)
-    if !in_journey?
+    unless @journeys[-1].in_journey?
       @journeys << journey_class.new(nil)
     end
     @journeys[-1].exit_station = exit_station
     deduct(@journeys[-1].fare)
-  end
-
-  def in_journey?
-    @journeys[-1].in_journey?
   end
 
   private

@@ -1,10 +1,22 @@
 require 'journeylog'
 
 describe JourneyLog do
+  let(:station) { double 'station' }
+  let(:journey) { double 'journey' }
+
+  it 'initializes with an empty log' do
+    expect(subject.journey_list).to eq []
+  end
 
   describe '#start' do
-    subject { described_class.new.instance_variable_get(:@journey_class) }
-    it { is_expected.to respond_to(:new).with(1).argument }
+    it do
+      subject.start(station)
+      expect(subject.journey_list[-1].current_journey[:in]).to eq station
+    end
+
+
   end
+
+
 
 end

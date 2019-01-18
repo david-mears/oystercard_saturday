@@ -50,7 +50,7 @@ RSpec.describe OysterCard do
       end
 
       it "remembers the entry station" do
-        expect(oystercard.journeys[-1].x[:in]).to eq(station)
+        expect(oystercard.journeys[-1].current_journey[:in]).to eq(station)
       end
     end
 
@@ -62,21 +62,7 @@ RSpec.describe OysterCard do
 
       it "stores the last journey in @journeys" do
         oystercard.touch_out(station_2)
-        expect(oystercard.journeys[-1].x[:out]).to eq station_2
-      end
-
-    end
-
-    describe '#in_journey?' do
-
-      it 'returns true if touched in' do
-        oystercard.touch_in(station)
-        expect(oystercard.in_journey?).to eq true
-      end
-
-      it 'returns false if touched out' do
-        oystercard.touch_out(station)
-        expect(oystercard.in_journey?).to eq false
+        expect(oystercard.journeys[-1].current_journey[:out]).to eq station_2
       end
 
     end
@@ -90,8 +76,8 @@ RSpec.describe OysterCard do
         oystercard.touch_in(station)
         oystercard.touch_in(station_2)
 
-        expect(oystercard.journeys[-1].x).to eq expected_last_journey
-        expect(oystercard.journeys[-2].x).to eq expected_penultimate_journey
+        expect(oystercard.journeys[-1].current_journey).to eq expected_last_journey
+        expect(oystercard.journeys[-2].current_journey).to eq expected_penultimate_journey
       end
     end
 
@@ -105,8 +91,8 @@ RSpec.describe OysterCard do
         oystercard.touch_out(station)
         oystercard.touch_out(station_2)
 
-        expect(oystercard.journeys[-1].x).to eq expected_last_journey
-        expect(oystercard.journeys[-2].x).to eq expected_penultimate_journey
+        expect(oystercard.journeys[-1].current_journey).to eq expected_last_journey
+        expect(oystercard.journeys[-2].current_journey).to eq expected_penultimate_journey
       end
 
       it "deducts the penalty fare if the entry station is missed" do
