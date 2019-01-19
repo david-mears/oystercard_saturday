@@ -18,7 +18,7 @@ class Journey
   end
 
   def fare
-    return !@current_journey[:in] || !@current_journey[:out] ? PENALTY_FARE : MINIMUM_FARE
+    return !in_journey? ? PENALTY_FARE : MINIMUM_FARE
   end
 
 end

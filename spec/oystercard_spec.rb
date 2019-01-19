@@ -57,7 +57,7 @@ RSpec.describe OysterCard do
     describe '#touch_out' do
 
       it "deducts the fare" do
-        expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by(-Journey::MINIMUM_FARE)
+        expect{ oystercard.touch_out(station) }.to change{ oystercard.balance }.by(-Journey::PENALTY_FARE)
       end
 
       it "stores the last journey in @journeys" do
